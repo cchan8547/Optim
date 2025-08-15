@@ -547,7 +547,7 @@ def plot_portfolio_vs_spy(portfolio_series, spy_series, title="Portfolio vs SPY 
             ax=ax,
             label='My Portfolio',
             linewidth=1.8,
-            color='#1f77b4',
+            color='#ff7f0e',
             alpha=0.8,
             antialiased=True
         )
@@ -556,7 +556,7 @@ def plot_portfolio_vs_spy(portfolio_series, spy_series, title="Portfolio vs SPY 
             ax=ax,
             label='SPY',
             linewidth=1.8,
-            color='#ff7f0e',
+            color='#1f77b4',
             alpha=0.8,
             antialiased=True
         )
