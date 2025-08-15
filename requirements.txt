@@ -10,3 +10,4 @@ socketio
 matplotlib
 seaborn
 plotly
+openjij
