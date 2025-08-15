@@ -1,1 +1,1 @@
-# Optim
+# Portfolio optimization via QUBO
