@@ -1,7 +1,32 @@
-[theme]
-primaryColor = "#F39C12"
-backgroundColor = "#1E1E1E"
-secondaryBackgroundColor = "#2C2C2C"
-textColor = "#FFFFFF"
-font = "sans serif"
+import streamlit as st
+from pathlib import Path
+
+# 主題設定
+themes = {
+    "金色主題": {
+        "primaryColor": "#F39C12",
+        "backgroundColor": "#1E1E1E",
+        "secondaryBackgroundColor": "#2C2C2C",
+        "textColor": "#FFFFFF",
+        "font": "sans serif"
+    },
+    "藍色主題": {
+        "primaryColor": "#2980B9",
+        "backgroundColor": "#FFFFFF",
+        "secondaryBackgroundColor": "#EAF2F8",
+        "textColor": "#000000",
+        "font": "serif"
+    }
+}
+
+# 讓用戶選擇
+theme_choice = st.selectbox("選擇主題", list(themes.keys()))
+
+if st.button("套用主題"):
+    theme = themes[theme_choice]
+    config_content = "[theme]\n" + "\n".join(
+        [f'{k} = "{v}"' for k, v in theme.items()]
+    )
+    Path(".streamlit/config.toml").write_text(config_content, encoding="utf-8")
+    st.success(f"已套用「{theme_choice}」，請重新載入頁面。")
 
