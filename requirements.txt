@@ -6,7 +6,7 @@ yfinance
 scipy
 pyqubo
 requests
-socketio
+python-socketio
 matplotlib
 seaborn
 plotly
