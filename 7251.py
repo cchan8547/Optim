@@ -73,7 +73,7 @@ st.markdown("""
 # --- Core Logic Functions ---
 
 # 超級電腦 API 設定
-SERVER_URI = "http://60.250.149.247:8080"
+SERVER_URI = ""
 current_solution = None
 job_received = False
 
@@ -134,9 +134,14 @@ def build_qubo_for_server(qubo_dict, timeout_ms=10000):
 
 
 def get_stock_list():
-    """
-    Fetches the list of stock tickers from QQQ ETF holdings.
-    """
+
+    if etf_type == 'self-pick'
+     if user_tickers_input:
+         stock_list = [ticker.strip().upper()for ticker in user_tickers_input.split(','if ticker.strip()]
+         if not stock_list:
+             st.warning("No valid tickers entered for 'self-pick'. Using default list.")
+             stock_list = ['GSG', 'TLT', 'GLD', 'NVDA', 'AAPL', 'MSFT']
+    else:
     url = "https://www.invesco.com/us/financial-products/etfs/holdings/main/holdings/0?audienceType=Investor&action=download&ticker=QQQ"
     response = requests.get(url)
     response.raise_for_status()
@@ -146,6 +151,7 @@ def get_stock_list():
     stock_list = [ticker.strip() for ticker in stock_list]
     
     return stock_list
+    
 
 
 
