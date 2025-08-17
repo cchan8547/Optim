@@ -133,32 +133,43 @@ def build_qubo_for_server(qubo_dict, timeout_ms=10000):
     }, protocol=2)
 
 
-@st.cache_data(ttl=3600)  # Cache for 1 hour
-def get_sp500_tickers():
-    url = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
-    df = pd.read_html(url, header=0)[0]
-    return df['Symbol'].tolist()
 
+    
+def get_top_10_stocks():
+    """
+    Returns a curated list of the 10 most valuable and heavily traded US stocks.
+    """
+    return [
+        'AAPL',  
+        'MSFT',  
+        'AMZN',  
+        'NVDA',  
+        'GOOGL', 
+        'META',  
+        'TSLA',  
+        'BRK.B',
+        'KO',   
+        'V', 
+        'DIS'
+    ]
+    
 def get_stock_list(etf_type, user_tickers_input=None):
     """
     Fetches the list of stock tickers based on the ETF type.
     For 'self-picked', uses the provided user_tickers_input.
     """
-    if etf_type == 'SPY500':
-        stock_list = get_sp500_tickers()
-        stock_list = [sym.replace('.', '-') for sym in stock_list]
+    if etf_type == 'DOW30':
+        # Hard-coded list of current Dow Jones 30 components
+        stock_list = [
+            'AAPL', 'AMGN', 'AXP', 'BA', 'CAT', 'CRM', 'CSCO', 'CVX', 'DOW', 'GS',
+            'HD', 'HON', 'IBM', 'INTC', 'JNJ', 'JPM', 'KO', 'MCD', 'MMM', 'MRK',
+            'MSFT', 'NKE', 'PG', 'TRV', 'UNH', 'V', 'VZ', 'WBA', 'WMT', 'DIS'
+        ]
     elif etf_type == 'self-picked':
-        # Handle user input for self-picked stocks
-        if user_tickers_input:
-            # Split by comma, strip whitespace, and filter out empty strings
-            stock_list = [ticker.strip().upper() for ticker in user_tickers_input.split(',') if ticker.strip()]
-            if not stock_list:
-                # Fallback if input is empty or only commas
-                st.warning("No valid tickers entered for 'self-picked'. Using default list.")
-                stock_list = ['GSG', 'TLT', 'GLD', 'NVDA', 'AAPL', 'MSFT']
+        if selected_tickers and len(selected_tickers) > 0:
+            return selected_tickers
         else:
-            # Fallback if function is called without input for self-picked
-            stock_list = ['GSG', 'TLT', 'GLD', 'NVDA', 'AAPL', 'MSFT']
+            return ['AAPL', 'MSFT', 'AMZN', 'NVDA', 'GOOGL']  # Fallback: top 5
     elif etf_type == 'QQQ':
         url = "https://www.invesco.com/us/financial-products/etfs/holdings/main/holdings/0?audienceType=Investor&action=download&ticker=QQQ"
         response = requests.get(url)
@@ -258,8 +269,9 @@ def calculate_sharpe_ratio_metrics(selected_indices, selected_weights, returns_d
     return sharpe, mu_annual, sigma_annual
 
 
+
 def optimize_portfolio(etf_type, start_date, end_date, p_value, q_value, server_uri=None, use_supercomputer=False,
-                       user_tickers_input=None):
+                       selected_tickers=None):  # ← Changed parameter name
     """Optimizes portfolio and returns results dictionary."""
     global SERVER_URI, current_solution, job_received
     # Reset global state for each run
@@ -591,30 +603,29 @@ def plot_portfolio_vs_spy(portfolio_series, spy_series, title="Portfolio vs SPY 
         st.error(f"❌ Enhanced plotting failed: {e}")
 
 
-# 點樣用：
-# my_custom_plot(result['portfolio_value_ts'], result['spy_price_ts'])
+
 def main():
     st.title("📈 QUBO Portfolio Optimizer")
     st.markdown("Optimize your investment portfolio using Quantum-inspired computing (QUBO).")
 
     # --- Sidebar Inputs ---
     st.sidebar.header("Configuration")
-
-    etf_type = st.sidebar.selectbox("Select ETF Universe", ['QQQ', 'SPY500', 'self-picked'], index=0)
-
+    etf_type = st.sidebar.selectbox("Select ETF ", ['QQQ', 'DOW30', 'self-picked'], index=0)
     # --- Conditional Input for Self-Picked Tickers ---
     user_tickers_input = None
     if etf_type == 'self-picked':
-        default_tickers = "GSG,TLT,GLD,NVDA,AAPL,MSFT"
-        user_tickers_input = st.sidebar.text_area(
-            "Enter your stock tickers (comma-separated):",
-            value=default_tickers,
-            height=100,
-            help="e.g., AAPL, MSFT, GOOGL",
-            key="user_tickers"  # Add unique key for state management
-        )
-        st.sidebar.info("Please ensure ticker symbols are correct. At least one ticker is required.")
+        top_10_tickers = get_top_10_stocks()
+        st.sidebar.info("Select stocks from the top 10 most valuable and traded companies:")
 
+        selected_tickers = st.sidebar.multiselect(
+            "Choose stocks to include:",
+            options=top_10_tickers,
+            default=top_10_tickers[:5],  # Default: first 5 (AAPL, MSFT, AMZN, NVDA, GOOGL)
+            help="Select one or more stocks from the top 10 largest companies by market cap and trading volume."
+        )
+
+        if not selected_tickers:
+            st.sidebar.warning("⚠️ Please select at least one stock.")
     start_date = st.sidebar.date_input("Start Date", value=datetime.date(2024, 1, 1))
     end_date = st.sidebar.date_input("End Date", value=datetime.date(2025, 1, 1))
 
@@ -645,7 +656,7 @@ def main():
             'use_supercomputer': use_supercomputer
         }
         if etf_type == 'self-picked':
-            optimize_kwargs['user_tickers_input'] = user_tickers_input
+            optimize_kwargs['selected_tickers'] = selected_tickers
 
         with st.spinner("Running optimization..."):
             result = optimize_portfolio(**optimize_kwargs)
