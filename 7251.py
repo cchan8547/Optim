@@ -153,11 +153,8 @@ def get_top_10_stocks():
         'DIS'
     ]
     
-def get_stock_list(etf_type, user_tickers_input=None):
-    """
-    Fetches the list of stock tickers based on the ETF type.
-    For 'self-picked', uses the provided user_tickers_input.
-    """
+def get_stock_list(etf_type, selected_tickers=None):
+    
     if etf_type == 'DOW30':
         # Hard-coded list of current Dow Jones 30 components
         stock_list = [
@@ -284,7 +281,7 @@ def optimize_portfolio(etf_type, start_date, end_date, p_value, q_value, server_
     try:
         # --- 1. Get Stock List ---
         if etf_type == 'self-picked':
-            stock_list = get_stock_list(etf_type, user_tickers_input)
+            stock_list = get_stock_list(etf_type, selected_tickers)
         else:
             stock_list = get_stock_list(etf_type)
 
@@ -612,7 +609,7 @@ def main():
     st.sidebar.header("Configuration")
     etf_type = st.sidebar.selectbox("Select ETF ", ['QQQ', 'DOW30', 'self-picked'], index=0)
     # --- Conditional Input for Self-Picked Tickers ---
-    user_tickers_input = None
+    selected_tickers = None
     if etf_type == 'self-picked':
         top_10_tickers = get_top_10_stocks()
         st.sidebar.info("Select stocks from the top 10 most valuable and traded companies:")
