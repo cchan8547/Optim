@@ -133,38 +133,20 @@ def build_qubo_for_server(qubo_dict, timeout_ms=10000):
     }, protocol=2)
 
 
-def get_stock_list(etf_type, user_tickers_input=None):
+def get_stock_list():
     """
-    Fetches the list of stock tickers based on the ETF type.
-    For 'self-picked', uses the provided user_tickers_input.
+    Fetches the list of stock tickers from QQQ ETF holdings.
     """
-    if etf_type == 'SPY500':
-        url = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies  '
-        df = pd.read_html(url, header=0)[0]
-        stock_list = df['Symbol'].tolist()
-        stock_list = [sym.replace('.', '-') for sym in stock_list]
-    elif etf_type == 'self-picked':
-        # Handle user input for self-picked stocks
-        if user_tickers_input:
-            # Split by comma, strip whitespace, and filter out empty strings
-            stock_list = [ticker.strip().upper() for ticker in user_tickers_input.split(',') if ticker.strip()]
-            if not stock_list:
-                # Fallback if input is empty or only commas
-                st.warning("No valid tickers entered for 'self-picked'. Using default list.")
-                stock_list = ['GSG', 'TLT', 'GLD', 'NVDA', 'AAPL', 'MSFT']
-        else:
-            # Fallback if function is called without input for self-picked
-            stock_list = ['GSG', 'TLT', 'GLD', 'NVDA', 'AAPL', 'MSFT']
-    elif etf_type == 'QQQ':
-        url = "https://www.invesco.com/us/financial-products/etfs/holdings/main/holdings/0?audienceType=Investor&action=download&ticker=QQQ"
-        response = requests.get(url)
-        response.raise_for_status()
-        holdings_df = pd.read_csv(StringIO(response.text))
-        stock_list = holdings_df['Holding Ticker'].dropna().tolist()
-        stock_list = [ticker.strip() for ticker in stock_list]
-    else:
-        raise ValueError("Invalid ETF type. Choose from 'SPY500', 'self-picked', 'QQQ'.")
+    url = "https://www.invesco.com/us/financial-products/etfs/holdings/main/holdings/0?audienceType=Investor&action=download&ticker=QQQ"
+    response = requests.get(url)
+    response.raise_for_status()
+    holdings_df = pd.read_csv(StringIO(response.text))
+    
+    stock_list = holdings_df['Holding Ticker'].dropna().tolist()
+    stock_list = [ticker.strip() for ticker in stock_list]
+    
     return stock_list
+
 
 
 def calculate_max_drawdown(cumulative_values):
