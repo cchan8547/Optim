@@ -458,8 +458,8 @@ def optimize_portfolio(etf_type, start_date, end_date, p_value, q_value, server_
         if selected_indices and total_investment > 0:
             try:
                 selected_tickers = [downloaded_tickers[i] for i in selected_indices]
-                selected_prices_df = data[selected_tickers].reindex(returns_df.index, method='pad').fillna(
-                    method='pad')
+               
+                selected_prices_df = data[selected_tickers].reindex(returns_df.index).ffill()
 
                 selected_dollar_positions = np.array([list_price_start[i] for i in selected_indices])
                 selected_weights_fractional = selected_dollar_positions / selected_dollar_positions.sum()
