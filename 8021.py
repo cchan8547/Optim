@@ -135,11 +135,14 @@ def get_stock_list(etf_type, user_tickers_input=None):
     Fetches the list of stock tickers based on the ETF type.
     For 'self-picked', uses the provided user_tickers_input.
     """
-    if etf_type == 'SPY500':
-        url = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
-        df = pd.read_html(url, header=0)[0]
-        stock_list = df['Symbol'].tolist()
-        stock_list = [sym.replace('.', '-') for sym in stock_list]
+    if etf_type == 'DOW30':
+        
+        stock_list = stock_list = [
+            'NVDA', 'MSFT', 'AAPL', 'AMZN', 'WMT', 'JPM', 'V', 'JNJ', 'HD', 'PG',
+            'CVX', 'KO', 'UNH', 'CSCO', 'CRM', 'IBM', 'MCD', 'AXP', 'GS', 'MRK',
+            'DIS', 'CAT', 'VZ', 'BA', 'AMGN', 'HON', 'NKE', 'SHW', 'MMM', 'TRV'
+        ]
+        
     elif etf_type == 'self-picked':
         # Handle user input for self-picked stocks
         if user_tickers_input:
@@ -657,7 +660,7 @@ def main():
     st.markdown("Optimize your investment portfolio using Quantum-inspired computing (QUBO).")
     # --- Sidebar Inputs ---
     st.sidebar.header("Configuration")
-    etf_type = st.sidebar.selectbox("Select ETF Universe", ['QQQ', 'SPY500', 'self-picked'], index=0)
+    etf_type = st.sidebar.selectbox("Select ETF Universe", ['QQQ', 'DOW30', 'self-picked'], index=0)
     # --- Conditional Input for Self-Picked Tickers ---
     user_tickers_input = None
     if etf_type == 'self-picked':
