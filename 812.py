@@ -88,11 +88,12 @@ def build_qubo_for_server(qubo_dict, timeout_ms=10000):
     }, protocol=2)
 
 def get_stock_list(etf_type, user_tickers_input=None):
-    if etf_type == 'SPY500':
-        url = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
-        df = pd.read_html(url, header=0)[0]
-        stock_list = df['Symbol'].tolist()
-        stock_list = [sym.replace('.', '-') for sym in stock_list]
+    if etf_type == 'DOW30' :
+       stock_list = [
+            'NVDA', 'MSFT', 'AAPL', 'AMZN', 'WMT', 'JPM', 'V', 'JNJ', 'HD', 'PG',
+            'CVX', 'KO', 'UNH', 'CSCO', 'CRM', 'IBM', 'MCD', 'AXP', 'GS', 'MRK',
+            'DIS', 'CAT', 'VZ', 'BA', 'AMGN', 'HON', 'NKE', 'SHW', 'MMM', 'TRV'
+        ]
     elif etf_type == 'self-picked':
         if user_tickers_input:
             stock_list = [ticker.strip().upper() for ticker in user_tickers_input.split(',') if ticker.strip()]
@@ -558,7 +559,7 @@ def main():
 
     # --- Sidebar Inputs ---
     st.sidebar.header("Configuration")
-    etf_type = st.sidebar.selectbox("Select ETF Universe", ['QQQ', 'SPY500', 'self-picked'], index=0)
+    etf_type = st.sidebar.selectbox("Select ETF Universe", ['QQQ', 'DOW30', 'self-picked'], index=0)
     user_tickers_input = None
     if etf_type == 'self-picked':
         default_tickers = "GSG,TLT,GLD,NVDA,AAPL,MSFT"
