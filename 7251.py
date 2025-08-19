@@ -174,6 +174,59 @@ def get_stock_list(etf_type, selected_tickers=None):
         holdings_df = pd.read_csv(StringIO(response.text))
         stock_list = holdings_df['Holding Ticker'].dropna().tolist()
         stock_list = [ticker.strip() for ticker in stock_list]
+    elif etf_type == '0050':
+        stock_list = [
+    '2330.TW',  # 台積電
+    '2317.TW',  # 鴻海
+    '2454.TW',  # 聯發科
+    '2308.TW',  # 台達電
+    '2382.TW',  # 廣達
+    '2881.TW',  # 富邦金
+    '2891.TW',  # 中信金
+    '2882.TW',  # 國泰金
+    '2303.TW',  # 聯電
+    '2412.TW',  # 中華電
+    '2884.TW',  # 玉山金
+    '2886.TW',  # 兆豐金
+    '3711.TW',  # 日月光投控
+    '2357.TW',  # 華碩
+    '1216.TW',  # 統一
+    '2885.TW',  # 元大金
+    '2345.TW',  # 智邦
+    '3231.TW',  # 緯創
+    '3034.TW',  # 聯詠
+    '2892.TW',  # 第一金
+    '2379.TW',  # 瑞昱
+    '6669.TW',  # 緯穎
+    '2890.TW',  # 永豐金
+    '5880.TW',  # 合庫金
+    '2383.TW',  # 台光電
+    '2880.TW',  # 華南金
+    '3661.TW',  # 世芯-KY
+    '3017.TW',  # 奇鋐
+    '2883.TW',  # 凱基金
+    '3008.TW',  # 大立光
+    '2301.TW',  # 光寶科
+    '2603.TW',  # 長榮
+    '2002.TW',  # 中鋼
+    '5871.TW',  # 中租-KY
+    '2327.TW',  # 國巨
+    '2887.TW',  # 台新金
+    '5876.TW',  # 上海商銀
+    '1101.TW',  # 台泥
+    '3045.TW',  # 台灣大
+    '4938.TW',  # 和碩
+    '4904.TW',  # 遠傳
+    '2395.TW',  # 研華
+    '2207.TW',  # 和泰車
+    '1301.TW',  # 台塑
+    '2912.TW',  # 統一超
+    '6446.TW',  # 藥華藥
+    '1303.TW',  # 南亞
+    '2609.TW',  # 陽明
+    '2615.TW',  # 萬海
+    '6505.TW'   # 台塑化
+]
     else:
         raise ValueError("Invalid ETF type. Choose from 'SPY500', 'self-picked', 'QQQ'.")
     return stock_list
@@ -607,7 +660,7 @@ def main():
 
     # --- Sidebar Inputs ---
     st.sidebar.header("Configuration")
-    etf_type = st.sidebar.selectbox("Select ETF ", ['QQQ', 'DOW30', 'self-picked'], index=0)
+    etf_type = st.sidebar.selectbox("Select ETF ", ['QQQ', 'DOW30', '0050','self-picked'], index=0)
     # --- Conditional Input for Self-Picked Tickers ---
     selected_tickers = None
     if etf_type == 'self-picked':
