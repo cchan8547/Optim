@@ -34,33 +34,17 @@ Model 3 provides a more rigorous investment strategy validation method – rolli
 - **Historical Composition:** Visualizes changes in portfolio composition during the backtest period.
 - **Supercomputer API Integration:** Optional use of an external supercomputer API in each optimization step of the backtest.
 
-## Installation
-
-1.  **Clone the repository:**
-    ```bash
-    git clone <repository_url>
-    cd <repository_name>
-    ```
-
-2.  **Create and activate a virtual environment (recommended):**
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # macOS/Linux
-    # venv\Scripts\activate  # Windows
-    ```
-
-3.  **Install dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
 
 ## Usage
 
 Launch the Streamlit application:
 
-```bash
+```
 streamlit run main.py
 ```
+
+Better approach:
+enter the website https://qubo-hc.streamlit.app/
 
 The application will open in your default browser. You can select different model pages via the left navigation bar.
 
@@ -68,11 +52,8 @@ The application will open in your default browser. You can select different mode
 
 ### Supercomputer API (Optional)
 
-This application supports connecting to an external supercomputer API (e.g., Inventec's QUBO solving service) to accelerate complex QUBO solving processes. If you wish to use this feature, please ensure that the `SERVER_URI` variable in `7251.py`, `8021.py`, and `812.py` files points to the correct API endpoint. The default value is `http://60.250.149.247:8080`.
+This application supports connecting to an external solver API (Compal GPU Annealer（CGA）) to accelerate complex QUBO solving processes. This function is not avaliable to the public currently
 
-```python
-SERVER_URI = "http://60.250.149.247:8080" # or your API endpoint
-```
 
 ## Dependencies
 
@@ -91,12 +72,7 @@ All necessary Python dependencies are listed in the `requirements.txt` file, inc
 - `seaborn`
 - `plotly`
 
-## Contribution
 
-Contributions of any kind are welcome! If you have any suggestions or find bugs, feel free to submit an Issue or Pull Request.
 
-## License
-
-[Please fill in license information here, e.g., MIT License.]
 
 
