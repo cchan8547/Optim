@@ -682,8 +682,8 @@ def main():
     st.sidebar.subheader("QUBO Parameters")
     p_value = st.sidebar.number_input("Return Weight (p)", min_value=0.01, value=1.0, step=0.1)
     q_value = st.sidebar.number_input("Risk Weight (q)", min_value=0.01, value=1.0, step=0.1)
-
-    use_supercomputer = False  # Hardcoded for simplicity
+    use_supercomputer = st.sidebar.checkbox("Use Supercomputer API", value=False)
+    #use_supercomputer = False  # Hardcoded for simplicity
 
     # --- Run Button ---
     run_button = st.sidebar.button("🚀 Optimize Portfolio")
