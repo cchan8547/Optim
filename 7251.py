@@ -73,7 +73,7 @@ st.markdown("""
 # --- Core Logic Functions ---
 
 # 超級電腦 API 設定
-SERVER_URI = ""
+SERVER_URI = "http://60.250.149.247:8080"
 current_solution = None
 job_received = False
 
@@ -380,7 +380,7 @@ def optimize_portfolio(etf_type, start_date, end_date, p_value, q_value, server_
         w = w_1 - 1
 
         # --- 5. Set up QUBO Model ---
-        num_bits = 10
+        num_bits = 4
         x = Array.create("x", shape=(N, num_bits), vartype="BINARY")
         weights = np.array([2 ** j for j in range(num_bits)])
 
